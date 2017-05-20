@@ -44,3 +44,5 @@ if __name__ == '__main__':
 #will help:
 #http://www.python-course.eu/tkinter_canvas.php
 #http://effbot.org/tkinterbook/canvas.htm
+
+#good start [600, 100, 200, 500, 350, 800, 700, 1000]

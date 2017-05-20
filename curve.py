@@ -9,7 +9,7 @@ class Curve:
 		if not type(l) is list:
 			raise Exception("argument to create a curve must be a list of numbers")
 
-		aux = max(l)
+		aux = len(l)
 		n = 0
 		while n < aux:
 			if not isinstance(l[n], numbers.Number) or not isinstance(l[n+1], numbers.Number):
