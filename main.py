@@ -34,7 +34,8 @@ def main():
 	frame.pack()
 
 	#DUNNO YET ^^
-	frame.create_polygon(mcurve.printable(), outline="black", width=3)
+	# frame.create_polygon(mcurve.printable(), outline="black", width=3)
+	mcurve.draw(frame)
 
 	tk.mainloop()
 
@@ -45,4 +46,4 @@ if __name__ == '__main__':
 #http://www.python-course.eu/tkinter_canvas.php
 #http://effbot.org/tkinterbook/canvas.htm
 
-#good start [600, 100, 200, 500, 350, 800, 700, 1000]
+#good start [100, 600, 500, 200, 800, 350, 1000, 700]
