@@ -42,7 +42,6 @@ class Curve:
 		n = 0
 		dts2 = self.dotS/2
 		while n < self.lopS:
-			print(n, self.lopS)
 			canva.create_oval(self.lop[n].x - dts2, self.lop[n].y - dts2, self.lop[n].x + dts2, self.lop[n].y + dts2, fill="black")
 			if n != self.lopS-1:
 				canva.create_line(self.lop[n].x, self.lop[n].y, self.lop[n+1].x, self.lop[n+1].y)
