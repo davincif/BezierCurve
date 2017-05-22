@@ -29,7 +29,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-
-#will help:
-#http://www.python-course.eu/tkinter_canvas.php
-#http://effbot.org/tkinterbook/canvas.htm

@@ -1,5 +1,4 @@
 from point import Point2D
-import numbers
 import bt
 
 class Curve:
