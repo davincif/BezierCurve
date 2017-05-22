@@ -2,40 +2,27 @@
 
 from curve import Curve
 import tkinter as tk
+import functools
 
+
+#FUNCTIONS
+def onclick(event, curve, canva):
+	curve.add_point(event.x, event.y)
+	curve.draw(canva)
 
 #MAIN
 def main():
-	#GETTING INITIAL POINTS BY TERMINAL
-	print("enter the points, or just a dot '.' when you're done")
-	baux = True
-	mcurve = [] #main curve
-	while baux:
-		print("points ", mcurve)
-		x = str(input("\nx = "))
-		if x != '.':
-			y = str(input("y = "))
-			if y != '.':
-				mcurve = mcurve + [float(x), float(y)]
-			else:
-				baux = False
-		else:
-			baux = False
-	print("points get ", mcurve, end='\n\n\n')
-	mcurve = Curve(mcurve)
-
+	mcurve = Curve() #main curve
 	#CREATING CANVA
 	tkroot = tk.Tk()
 	scrw = tkroot.winfo_screenwidth() #screen width
 	scrh = tkroot.winfo_screenheight() #screen height
 	print("resolution " + str(scrw) + "x" + str(scrh))
+	# frame = tk.Canvas(tkroot, width=400, height=400)
 	frame = tk.Canvas(tkroot, width=scrw, height=scrh)
 	tkroot.attributes("-fullscreen", True)
+	tkroot.bind('<Button-1>', lambda event : onclick(event, curve=mcurve, canva=frame))
 	frame.pack()
-
-	#DUNNO YET ^^
-	mcurve.draw(frame)
-
 	tk.mainloop()
 
 if __name__ == '__main__':
@@ -44,5 +31,3 @@ if __name__ == '__main__':
 #will help:
 #http://www.python-course.eu/tkinter_canvas.php
 #http://effbot.org/tkinterbook/canvas.htm
-
-#good start [100, 600, 500, 200, 800, 250, 1000, 700]

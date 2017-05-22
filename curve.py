@@ -5,6 +5,7 @@ class Curve:
 	lop = [] #list of points
 	lopS = 0 #lop size
 	dotS = 6 #the dot's size that marks the end of the segments, in pixels
+	width = 1 #default width of the line
 
 	#OVERWRITE METHODS
 	def __init__(self, l):
@@ -23,6 +24,9 @@ class Curve:
 			n += 2
 		self.lopS /= 2
 
+	def __init__(self):
+		pass
+
 	def __str__(self):
 		return str(self.printable())
 
@@ -30,6 +34,7 @@ class Curve:
 	#COMMON METHODS
 	def add_point(self, x, y):
 		self.lop += [Point2D(x,y)]
+		self.lopS += 1
 
 	def printable(self):
 		lp = []
@@ -44,7 +49,7 @@ class Curve:
 		while n < self.lopS:
 			canva.create_oval(self.lop[n].x - dts2, self.lop[n].y - dts2, self.lop[n].x + dts2, self.lop[n].y + dts2, fill="black")
 			if n != self.lopS-1:
-				canva.create_line(self.lop[n].x, self.lop[n].y, self.lop[n+1].x, self.lop[n+1].y)
+				canva.create_line(self.lop[n].x, self.lop[n].y, self.lop[n+1].x, self.lop[n+1].y, width=self.width)
 			n += 1
 
 	#AUXILIAR METHODS
