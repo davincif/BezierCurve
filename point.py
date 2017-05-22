@@ -1,6 +1,6 @@
 class Point2D:
-	#x - double position
-	#y - double position
+	x = None
+	y = None
 
 	#OVERWRITE METHODS
 	def __init__(self, x, y):

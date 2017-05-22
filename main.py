@@ -13,6 +13,8 @@ def onclick(event, curve, canva):
 #MAIN
 def main():
 	mcurve = Curve() #main curve
+	mcurve.makeMaster()
+
 	#CREATING CANVA
 	tkroot = tk.Tk()
 	scrw = tkroot.winfo_screenwidth() #screen width
