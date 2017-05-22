@@ -1,4 +1,4 @@
-from Point import Point2D
+from point import Point2D
 import numbers
 
 class Curve:
