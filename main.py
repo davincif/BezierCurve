@@ -10,6 +10,17 @@ def onclick(event, curve, canva):
 	curve.add_point(event.x, event.y)
 	curve.draw(canva)
 
+def keypress(event, curve, canva):
+	if event.char == 'b':
+		curve.calcBezier()
+		curve.draw(canva)
+	elif event.char == 'd':
+		curve.calcDerivatives()
+		curve.draw(canva)
+	else:
+		pass
+
+
 #MAIN
 def main():
 	mcurve = Curve() #main curve
@@ -20,10 +31,11 @@ def main():
 	scrw = tkroot.winfo_screenwidth() #screen width
 	scrh = tkroot.winfo_screenheight() #screen height
 	print("resolution " + str(scrw) + "x" + str(scrh))
-	# frame = tk.Canvas(tkroot, width=400, height=400)
-	frame = tk.Canvas(tkroot, width=scrw, height=scrh)
-	tkroot.attributes("-fullscreen", True)
-	tkroot.bind('<Button-1>', lambda event : onclick(event, curve=mcurve, canva=frame))
+	frame = tk.Canvas(tkroot, width=400, height=400)
+	# frame = tk.Canvas(tkroot, width=scrw, height=scrh)
+	# tkroot.attributes("-fullscreen", True)
+	tkroot.bind('<Button-1>', lambda event: onclick(event, curve=mcurve, canva=frame))
+	tkroot.bind("<Key>", lambda event: keypress(event, curve=mcurve, canva=frame))
 	frame.pack()
 	tk.mainloop()
 

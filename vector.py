@@ -36,5 +36,3 @@ class Vector2D:
 		return self.__mul__(other)
 
 	#COMMON METHODS
-	def point2vector(self):
-		return Vector2D(self.x, self.y)

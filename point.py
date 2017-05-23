@@ -50,8 +50,8 @@ class Point2D:
 		return Point2D(-self.x, -self.y)
 
 	#COMMON METHODS
-	def vector2point(self):
-		return Point2D(self.x, self.y)
+	def point2vector(self):
+		return Vector2D(self.x, self.y)
 
 	def r0(self):
 		return Vector2D(self.x, self.y)
