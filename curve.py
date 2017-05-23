@@ -152,11 +152,8 @@ class Curve:
 				n += 1
 
 		if self.__delc is not None:
-			itr = 0 #iterator
-			while itr < self.__degree:
-				if self.__delc[itr].__shown:
-					self.__delc[itr].draw(canva)
-				itr += 1
+			for elem in self.__delc:
+				elem.draw(canva)
 
 		if self.__bcurve is not None:
 			self.__bcurve.draw(canva)
@@ -170,17 +167,19 @@ class Curve:
 			raise Exception("only the master cusve can be derivated")
 		elif self.__degree < 1:
 			print("The curve must have at least degree 1, but has only " + str(self.__degree))
-		elif self.__delc is not None and len(self.__delc) > 0:
+		elif self.__delc is not None and len(self.__delc) == self.__degree:
 			print("This curve already was derivated")
-			self.toggle_derivated_show()
 		else:
+			if self.__delc == None:
+				self.__delc = []
 			prevc = self #previous curve
 			newc = self #current curve
-			self.__delc = []
 			itr1 = 0 #iterator 1
 			while itr1 < self.__degree:
-				self.__delc += [Curve()]
-				self.__delc[itr1].__lop = []
+				if itr1 >= len(self.__delc):
+					self.__delc += [Curve()]
+					self.__delc[itr1].__lop = []
+
 				self.__delc[itr1].color = self.color
 				if itr1 == 0:
 					prevc = self
@@ -188,10 +187,12 @@ class Curve:
 				else:
 					prevc = self.__delc[itr1-1]
 					newc = self.__delc[itr1]
+
 				itr2 = 0 #iterator 2
 				while itr2 < prevc.__lopS-1:
 					#derivate
-					newc.__add_point(0.5*prevc.__lop[itr2] + 0.5*prevc.__lop[itr2+1])
+					if itr2 >= newc.__lopS:
+						newc.__add_point(0.5*prevc.__lop[itr2] + 0.5*prevc.__lop[itr2+1])
 					itr2 += 1
 				newc.decay_color(0.3, (230, 230, 230))
 				itr1 += 1
@@ -200,7 +201,6 @@ class Curve:
 	def calcBezier(self):
 		if self.__bcurve is not None:
 			print("Bezier curve is already calculated")
-			self.__bcurve.toggle_show()
 		elif self.__degree > 1:
 			#ok calculate it!
 			self.__bcurve = Curve()
