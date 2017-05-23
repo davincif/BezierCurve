@@ -18,6 +18,7 @@ class Curve:
 	thickness = 1 #default width of the line
 	__shown = True #if the curve is being shown or not
 	color = '#000000' #default line color
+	delt = 0.5 #de 't' parameter of the derivation -this attribute only make difference when in the master curve
 
 	#OVERWRITE METHODS
 	def __init__(self):
@@ -101,7 +102,7 @@ class Curve:
 			self.__lop += [Point2D(x,y)]
 			self.__lopS += 1
 			if not self.__bezier:
-				self.calcDegree()
+				self.calc_degree()
 		else:
 			raise Exception("need Curve.add_point(number, number), got (" + str(type(x)) + ", " + str(type(y)) + ")")
 
@@ -114,7 +115,7 @@ class Curve:
 			raise Exception("need Curve.__add_point(Point2D), got (" + str(type(point)) + ")")
 		self.__lopS += 1
 		if not self.__bezier:
-			self.calcDegree()
+			self.calc_degree()
 
 	def printable(self):
 		lp = []
@@ -158,11 +159,11 @@ class Curve:
 		if self.__bcurve is not None:
 			self.__bcurve.draw(canva)
 
-	def calcDegree(self):
+	def calc_degree(self):
 		if not self.__bezier:
 			self.__degree = self.__lopS - 1
 
-	def calcDerivatives(self):
+	def calc_derivatives(self):
 		if not self.__master:
 			raise Exception("only the master cusve can be derivated")
 		elif self.__degree < 1:
@@ -192,16 +193,23 @@ class Curve:
 				while itr2 < prevc.__lopS-1:
 					#derivate
 					if itr2 >= newc.__lopS:
-						newc.__add_point(0.5*prevc.__lop[itr2] + 0.5*prevc.__lop[itr2+1])
+						newc.__add_point((1-self.delt)*prevc.__lop[itr2] + self.delt*prevc.__lop[itr2+1])
 					itr2 += 1
 				newc.decay_color(0.3, (230, 230, 230))
 				itr1 += 1
 			newc.change_color((0, 0, 255))
 
-	def calcBezier(self):
+	def calc_bezier(self):
 		if self.__degree > 1:
 			if self.__bcurve is not None:
 				del self.__bcurve #so we must recalc it
+			if self.__delc is None or len(self.__delc) != self.__degree:
+				if self.__delc is None or not self.__delc[0].__shown:
+					sflag = True #show flag
+
+				self.calc_derivatives()
+				if sflag: #don't show the derivated curves
+					self.toggle_derivated_show()
 			#ok calculate it!
 			self.__bcurve = Curve()
 			self.__bcurve.makeBezier()
@@ -210,12 +218,17 @@ class Curve:
 			intervals = 2
 			t = 1/intervals
 
-			n = self.__degree
+			n = self.__degree+1
 			i = 0
 			while i < n:
-				# point = self.__lop[i] * (bt.pt[n-1][i] * (1 - t)**(n-i) * t**i)
-				# bcaux.__add_point(point + (self.__lop[i] - point))
-				bcaux.__add_point(self.__lop[i] * (bt.pt[n-1][i] * (1 - t)**(n-i) * t**i))
+				point = None
+				while i < n:
+					point = bt.pt[n][i]*self.delt**i * (1 - self.delt)**(n-1) * self.__lop[i]
+					i += 1
+				p = 0
+				while p < self.__delc[i].__lopS:
+					bcaux.__add_point(self.__delc[i].__lop[p]*point)
+					p += 1
 				i += 1
 			print(bcaux)
 		elif self.__degree == -1:

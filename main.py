@@ -1,4 +1,4 @@
-#Bézier curve interactive vizualizer
+#Bezier curve interactive vizualizer
 
 from curve import Curve
 import tkinter as tk
@@ -12,10 +12,10 @@ def onclick(event, curve, canva):
 
 def keypress(event, curve, canva):
 	if event.char == 'b':
-		curve.calcBezier()
+		curve.calc_bezier()
 		curve.draw(canva)
 	elif event.char == 'd':
-		curve.calcDerivatives()
+		curve.calc_derivatives()
 		curve.draw(canva)
 	else:
 		pass
