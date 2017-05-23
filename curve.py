@@ -199,9 +199,9 @@ class Curve:
 			newc.change_color((0, 0, 255))
 
 	def calcBezier(self):
-		if self.__bcurve is not None:
-			print("Bezier curve is already calculated")
-		elif self.__degree > 1:
+		if self.__degree > 1:
+			if self.__bcurve is not None:
+				del self.__bcurve #so we must recalc it
 			#ok calculate it!
 			self.__bcurve = Curve()
 			self.__bcurve.makeBezier()
