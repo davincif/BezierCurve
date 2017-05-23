@@ -128,25 +128,26 @@ class Curve:
 		elif self.__delc is not None and len(self.__delc) > 0:
 			print("This curve already was derivated")
 		else:
+			prevc = self #previous curve
+			newc = self #current curve
 			self.__delc = []
 			itr1 = 0 #iterator 1
 			while itr1 < self.__degree:
 				self.__delc += [Curve()]
 				self.__delc[itr1].__lop = []
+				if itr1 == 0:
+					prevc = self
+					newc = self.__delc[itr1]
+				else:
+					prevc = self.__delc[itr1-1]
+					newc = self.__delc[itr1]
 				itr2 = 0 #iterator 2
-				while itr2 < self.__lopS-1:
+				while itr2 < prevc.__lopS-1:
 					#derivate
-					paux = 0.5*self.__lop[itr2] + 0.5*self.__lop[itr2+1]
-					self.__delc[itr1].__add_point(paux)
+					newc.__add_point(0.5*prevc.__lop[itr2] + 0.5*prevc.__lop[itr2+1])
 					itr2 += 1
 				itr1 += 1
-
-			#test print
-			print(self.__delc, str(len(self.__delc)))
-			itr1 = 0
-			while itr1 < self.__degree:
-				print(self.__delc[itr1])
-				itr1 += 1
+			newc.color = "Blue"
 
 	def calcBezier(self):
 		if self.__bcurve is not None:
