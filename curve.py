@@ -16,7 +16,9 @@ class Curve:
 	#APPEARANCE ATTRIBUTES
 	psize = 3 #the radius of the point size, in pixels
 	thickness = 1 #default width of the line
-	__shown = True #if the curve is being shown or not
+	show_points = True #show the points of the curve
+	show_lines = True #show the lines of the curve
+	__std_bshow = None #standard Bezier curve show mod (with is, with lines and no points). if curve is bezier, it's a bool
 	color = '#000000' #default line color
 	delt = 0.5 #the 't' parameter of the derivation -this attribute only make difference when in the master curve
 
@@ -46,34 +48,46 @@ class Curve:
 	def isBezier(self):
 		return self.__bezier
 
-	def makeMaster(self):
+	def make_master(self):
 		if self.__bezier:
 			raise Exception("This curve is already a bezier curve, can't be master as well")
 		self.__master = True
 		self.__derivative = []
 
-	def makeBezier(self):
+	def make_bezier(self):
 		if self.__master:
 			raise Exception("This curve is already a master curve, can't be bezier as well")
 		self.__bezier = True
 		self.__degree = -1
+		self.show_points = False
+		self.__std_bshow = True
 		self.color = "#0000ff"
 
-	def is_shown(self):
-		return self.__shown
-
 	def toggle_show(self):
-		self.__shown = not self.__shown
+		self.show_lines = not self.show_lines
+		self.show_points = not self.show_points
 
 	def toggle_bcurve_show(self):
 		if self.__bcurve is not None:
-			self.__bcurve.__shown = not self.__bcurve.__shown
+			self.__bcurve.show_lines = not self.__bcurve.show_lines
+			if not self.__bcurve.__std_bshow:
+				self.__bcurve.show_points = not self.__bcurve.show_points
 
-	def show(self, option):
-		if type(option) is bool:
-			self.__shown = option
-		else:
-			raise Exception("toogle the show stat you need to pass a bool argument")
+	def toggle_bcurve_points(self):
+		if self.__bcurve is not None:
+			if not self.__bcurve.__std_bshow:
+				self.__bcurve.show_points = not self.__bcurve.show_points
+			else:
+				print("cant show bezier points, its a standard curve")
+
+	def toggle_bcurve_lines(self):
+		if self.__bcurve is not None:
+			self.__bcurve.show_lines = not self.__bcurve.show_lines
+
+	def toggle_bcurve_std(self):
+		self.__bcurve.__std_bshow = not self.__bcurve.__std_bshow
+		self.__bcurve.show_points = False
+
 
 	def toggle_derivated_show(self):
 		if self.__delc is not None:
@@ -137,18 +151,20 @@ class Curve:
 		else:
 			canva.delete("derivative"+str(self.__degree))
 
-		if self.__shown:
+		if self.show_points or self.show_lines:
 			n = 0
 			while n < self.__lopS:
-				if not self.__bezier:
+				if self.show_points:
 					#do not draw the bezier curve points
 					item = canva.create_oval(self.__lop[n].x - self.psize, self.__lop[n].y - self.psize, self.__lop[n].x + self.psize, self.__lop[n].y + self.psize, fill=self.color)
 					if self.__master:
 						canva.itemconfig(item, tags="master")
+					elif self.__bezier:
+						canva.itemconfig(item, tags="bezier")
 					else:
 						canva.itemconfig(item, tags="derivative"+str(self.__degree))
 
-				if n != self.__lopS-1:
+				if self.show_lines and n != self.__lopS-1:
 					item = canva.create_line(self.__lop[n].x, self.__lop[n].y, self.__lop[n+1].x, self.__lop[n+1].y, width=self.thickness, fill=self.color)
 					if self.__master:
 						canva.itemconfig(item, tags="master")
@@ -206,7 +222,7 @@ class Curve:
 		if self.__degree > 1:
 			#ok calculate it!
 			self.__bcurve = Curve()
-			self.__bcurve.makeBezier()
+			self.__bcurve.make_bezier()
 			bcaux = self.__bcurve #Bezier curve auxiliar
 			bcaux.__lop = []
 			step = 1/intervals

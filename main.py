@@ -25,6 +25,9 @@ def keypress(event, curve, canva):
 	elif event.char == 's':
 		curve.toggle_derivated_show()
 		curve.draw(canva)
+	elif event.char == 'q':
+		curve.toggle_derivated_show()
+		curve.draw(canva)
 	else:
 		pass
 
@@ -32,7 +35,7 @@ def keypress(event, curve, canva):
 #MAIN
 def main():
 	mcurve = Curve() #main curve
-	mcurve.makeMaster()
+	mcurve.make_master()
 
 	#CREATING CANVA
 	tkroot = tk.Tk()
