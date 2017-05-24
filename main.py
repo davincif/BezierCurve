@@ -11,12 +11,19 @@ def onclick(event, curve, canva):
 	curve.draw(canva)
 
 def keypress(event, curve, canva):
+	#all this is temporary
 	if event.char == 'b':
-		curve.calc_bezier()
+		curve.calc_bezier(20)
+		curve.draw(canva)
+	elif event.char == 'v':
+		curve.toggle_bcurve_show()
 		curve.draw(canva)
 	elif event.char == 'd':
 		curve.delt = 0.5
 		curve.calc_derivatives()
+		curve.draw(canva)
+	elif event.char == 's':
+		curve.toggle_derivated_show()
 		curve.draw(canva)
 	else:
 		pass

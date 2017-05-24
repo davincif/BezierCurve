@@ -18,7 +18,7 @@ class Curve:
 	thickness = 1 #default width of the line
 	__shown = True #if the curve is being shown or not
 	color = '#000000' #default line color
-	delt = 0.5 #de 't' parameter of the derivation -this attribute only make difference when in the master curve
+	delt = 0.5 #the 't' parameter of the derivation -this attribute only make difference when in the master curve
 
 	#OVERWRITE METHODS
 	def __init__(self):
@@ -65,6 +65,10 @@ class Curve:
 	def toggle_show(self):
 		self.__shown = not self.__shown
 
+	def toggle_bcurve_show(self):
+		if self.__bcurve is not None:
+			self.__bcurve.__shown = not self.__bcurve.__shown
+
 	def show(self, option):
 		if type(option) is bool:
 			self.__shown = option
@@ -72,8 +76,9 @@ class Curve:
 			raise Exception("toogle the show stat you need to pass a bool argument")
 
 	def toggle_derivated_show(self):
-		for elem in self.__delc:
-			elem.toggle_show()
+		if self.__delc is not None:
+			for elem in self.__delc:
+				elem.toggle_show()
 
 	def change_color(self, rpg):
 		self.color = '#%02x%02x%02x' % rpg
@@ -197,16 +202,16 @@ class Curve:
 				itr1 += 1
 			newc.change_color((0, 0, 255))
 
-	def calc_bezier(self):
+	def calc_bezier(self, intervals):
 		if self.__degree > 1:
 			#ok calculate it!
 			self.__bcurve = Curve()
 			self.__bcurve.makeBezier()
 			bcaux = self.__bcurve #Bezier curve auxiliar
 			bcaux.__lop = []
-			step = 0.05
+			step = 1/intervals
 			self.delt = 0.0
-			while (self.delt - 1.0) < 0.0000001:
+			while (self.delt - 1.0) < 0.0000001: #self.delt == 1.0 -> float precision problem
 				self.calc_derivatives()
 				bcaux.__add_point(self.__delc[len(self.__delc)-1].__lop[0])
 				self.delt += step
