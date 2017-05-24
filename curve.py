@@ -135,13 +135,14 @@ class Curve:
 		if self.__shown:
 			n = 0
 			while n < self.__lopS:
-				item = canva.create_oval(self.__lop[n].x - self.psize, self.__lop[n].y - self.psize, self.__lop[n].x + self.psize, self.__lop[n].y + self.psize, fill=self.color)
-				if self.__master:
-					canva.itemconfig(item, tags="master")
-				elif self.__bezier:
-					canva.itemconfig(item, tags="bezier")
-				else:
-					canva.itemconfig(item, tags="derivative"+str(self.__degree))
+				if not self.__bezier:
+					#do not draw the bezier curve points
+					item = canva.create_oval(self.__lop[n].x - self.psize, self.__lop[n].y - self.psize, self.__lop[n].x + self.psize, self.__lop[n].y + self.psize, fill=self.color)
+					if self.__master:
+						canva.itemconfig(item, tags="master")
+					else:
+						canva.itemconfig(item, tags="derivative"+str(self.__degree))
+
 				if n != self.__lopS-1:
 					item = canva.create_line(self.__lop[n].x, self.__lop[n].y, self.__lop[n+1].x, self.__lop[n+1].y, width=self.thickness, fill=self.color)
 					if self.__master:
@@ -168,11 +169,8 @@ class Curve:
 			raise Exception("only the master cusve can be derivated")
 		elif self.__degree < 1:
 			print("The curve must have at least degree 1, but has only " + str(self.__degree))
-		elif self.__delc is not None and len(self.__delc) == self.__degree:
-			print("This curve already was derivated")
 		else:
-			if self.__delc == None:
-				self.__delc = []
+			self.__delc = []
 			prevc = self #previous curve
 			newc = self #current curve
 			itr1 = 0 #iterator 1
@@ -201,36 +199,18 @@ class Curve:
 
 	def calc_bezier(self):
 		if self.__degree > 1:
-			if self.__bcurve is not None:
-				del self.__bcurve #so we must recalc it
-			if self.__delc is None or len(self.__delc) != self.__degree:
-				if self.__delc is None or not self.__delc[0].__shown:
-					sflag = True #show flag
-
-				self.calc_derivatives()
-				if sflag: #don't show the derivated curves
-					self.toggle_derivated_show()
 			#ok calculate it!
 			self.__bcurve = Curve()
 			self.__bcurve.makeBezier()
 			bcaux = self.__bcurve #Bezier curve auxiliar
 			bcaux.__lop = []
-			intervals = 2
-			t = 1/intervals
-
-			n = self.__degree+1
-			i = 0
-			while i < n:
-				point = None
-				while i < n:
-					point = bt.pt[n][i]*self.delt**i * (1 - self.delt)**(n-1) * self.__lop[i]
-					i += 1
-				p = 0
-				while p < self.__delc[i].__lopS:
-					bcaux.__add_point(self.__delc[i].__lop[p]*point)
-					p += 1
-				i += 1
-			print(bcaux)
+			step = 0.05
+			self.delt = 0.0
+			while (self.delt - 1.0) < 0.0000001:
+				self.calc_derivatives()
+				bcaux.__add_point(self.__delc[len(self.__delc)-1].__lop[0])
+				self.delt += step
+			self.__delc = None
 		elif self.__degree == -1:
 			print("it already is a bezier curve")
 		else:

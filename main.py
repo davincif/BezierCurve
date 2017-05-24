@@ -15,6 +15,7 @@ def keypress(event, curve, canva):
 		curve.calc_bezier()
 		curve.draw(canva)
 	elif event.char == 'd':
+		curve.delt = 0.5
 		curve.calc_derivatives()
 		curve.draw(canva)
 	else:
