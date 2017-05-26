@@ -129,9 +129,9 @@ class Curve:
 		h = "0x" + self.color[1:len(self.color)]
 		h1, h2, h3 = h[0:4], '0x' + h[4:6], '0x' + h[6:8]
 		r, g , b = int(h1, 16), int(h2, 16), int(h3, 16)
-		r = r + (255*percentual)
-		g = g + (255*percentual)
-		b = b + (255*percentual)
+		r = r + int(255*percentual)
+		g = g + int(255*percentual)
+		b = b + int(255*percentual)
 		if r > rgblimit[0]:
 			r = rgblimit[0]
 		if g > rgblimit[1]:
