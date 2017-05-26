@@ -57,6 +57,16 @@ def stopMoving(event):
 
 	movingPoint = None
 
+def toggle_control_lines(event, curve, canva):
+	if curve.show_lines:
+		curve.show_lines = False
+	elif curve.show_points:
+		curve.show_points = False
+	else:
+		curve.show_lines = True
+		curve.show_points = True
+	curve.draw(canva)
+
 def keypress(event, curve, canva):
 	#all this is temporary
 	if event.char == 'b':
@@ -97,6 +107,7 @@ def main():
 	tkroot.bind("<Key>", lambda event: keypress(event, curve=mcurve, canva=frame))
 	tkroot.bind("<B1-Motion>", lambda event: onmove(event, curve=mcurve, canva=frame))
 	tkroot.bind("<ButtonRelease-1>", stopMoving)
+	tkroot.bind("<Key-space>", lambda event: toggle_control_lines(event, curve=mcurve, canva=frame))
 	frame.pack()
 	tk.mainloop()
 
