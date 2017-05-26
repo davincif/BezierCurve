@@ -16,10 +16,20 @@ def onclick(event, curve, canva):
 	global movingPoint
 
 	movingPoint = curve.is_over_point(event.x, event.y)
-	# print("clicekd ", event.x, event.y, "point ", movingPoint)
 	if movingPoint is None:
-		# print("add point")
+		dpoint, dlines = curve.is_showing_derivatives()
+		bpoint, blines = curve.is_showing_bcurve()
+
 		curve.add_point(event.x, event.y)
+
+		if bpoint or blines:
+			curve.calc_bezier(20)
+			curve.bcurve_show(bpoint, blines)
+		if dpoint or dlines:
+			curve.delt = 0.5
+			curve.calc_derivatives()
+
+		curve.derivatives_show(dpoint, dlines)
 		curve.draw(canva)
 
 def onmove(event, curve, canva):
@@ -28,10 +38,19 @@ def onmove(event, curve, canva):
 	if movingPoint is not None:
 		movingPoint.x = event.x
 		movingPoint.y = event.y
-		point, lines = curve.is_showing_bcurve()
-		if point or lines:
+		dpoint, dlines = curve.is_showing_derivatives()
+		bpoint, blines = curve.is_showing_bcurve()
+
+		if bpoint or blines:
 			curve.calc_bezier(20)
+		if dpoint or dlines:
+			curve.delt = 0.5
+			curve.calc_derivatives()
+
+		curve.bcurve_show(bpoint, blines)
+		curve.derivatives_show(dpoint, dlines)
 		curve.draw(canva)
+
 
 def stopMoving(event):
 	global movingPoint

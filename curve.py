@@ -104,6 +104,22 @@ class Curve:
 			return self.__bcurve.show_points, self.__bcurve.show_lines
 		return False, False
 
+	def derivatives_show(self, sp, sl): #sp = show_points | sl = show_lines
+		if self.__delc is not None:
+			for elem in self.__delc:
+				elem.show_points = sp
+				elem.show_lines = sl
+
+	def bcurve_show(self, sp, sl): #sp = show_points | sl = show_lines
+		if self.__bcurve is not None:
+			self.__bcurve.show_lines = sl
+			if self.__bcurve.__std_bshow:
+				self.__bcurve.show_points = False
+			else:
+				self.__bcurve.show_points = sp
+
+
+
 	def change_color(self, rpg):
 		self.color = '#%02x%02x%02x' % rpg
 		# r, g , b = rgb
