@@ -4,11 +4,39 @@ from curve import Curve
 import tkinter as tk
 import functools
 
+#GLOBAL VARIABLES
+global tolerance
+tolerance = 5
+global movingPoint
+movingPoint = None
+
 
 #FUNCTIONS
 def onclick(event, curve, canva):
-	curve.add_point(event.x, event.y)
-	curve.draw(canva)
+	global movingPoint
+
+	movingPoint = curve.is_over_point(event.x, event.y)
+	# print("clicekd ", event.x, event.y, "point ", movingPoint)
+	if movingPoint is None:
+		# print("add point")
+		curve.add_point(event.x, event.y)
+		curve.draw(canva)
+
+def onmove(event, curve, canva):
+	global movingPoint
+
+	if movingPoint is not None:
+		movingPoint.x = event.x
+		movingPoint.y = event.y
+		point, lines = curve.is_showing_bcurve()
+		if point or lines:
+			curve.calc_bezier(20)
+		curve.draw(canva)
+
+def stopMoving(event):
+	global movingPoint
+
+	movingPoint = None
 
 def keypress(event, curve, canva):
 	#all this is temporary
@@ -36,6 +64,7 @@ def keypress(event, curve, canva):
 def main():
 	mcurve = Curve() #main curve
 	mcurve.make_master()
+	tolerance = mcurve.psize
 
 	#CREATING CANVA
 	tkroot = tk.Tk()
@@ -47,6 +76,8 @@ def main():
 	# tkroot.attributes("-fullscreen", True)
 	tkroot.bind('<Button-1>', lambda event: onclick(event, curve=mcurve, canva=frame))
 	tkroot.bind("<Key>", lambda event: keypress(event, curve=mcurve, canva=frame))
+	tkroot.bind("<B1-Motion>", lambda event: onmove(event, curve=mcurve, canva=frame))
+	tkroot.bind("<ButtonRelease-1>", stopMoving)
 	frame.pack()
 	tk.mainloop()
 

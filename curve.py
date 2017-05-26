@@ -14,7 +14,7 @@ class Curve:
 	__bcurve = None #the Bezier curve. -this parameter is a Curve when calculated
 
 	#APPEARANCE ATTRIBUTES
-	psize = 3 #the radius of the point size, in pixels
+	psize = 5 #the radius of the point size, in pixels
 	thickness = 1 #default width of the line
 	show_points = True #show the points of the curve
 	show_lines = True #show the lines of the curve
@@ -93,6 +93,16 @@ class Curve:
 		if self.__delc is not None:
 			for elem in self.__delc:
 				elem.toggle_show()
+
+	def is_showing_derivatives(self):
+		if self.__delc is not None:
+			return self.__delc[0].show_points, self.__delc[0].show_lines
+		return False, False
+
+	def is_showing_bcurve(self):
+		if self.__bcurve is not None:
+			return self.__bcurve.show_points, self.__bcurve.show_lines
+		return False, False
 
 	def change_color(self, rpg):
 		self.color = '#%02x%02x%02x' % rpg
@@ -236,3 +246,9 @@ class Curve:
 			print("it already is a bezier curve")
 		else:
 			print("The curve must have at least degree 2, but has only " + str(self.__degree))
+
+	def is_over_point(self, x, y):
+		for elem in self.__lop:
+			if elem.x - self.psize < x and elem.x + self.psize > x and elem.y - self.psize < y and elem.y + self.psize > y:
+				return elem
+		return None
