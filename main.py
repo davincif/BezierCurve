@@ -1,6 +1,7 @@
 #Bezier curve interactive vizualizer
 
 from curve import Curve
+from curvature import Curvature
 import tkinter as tk
 import functools
 
@@ -9,47 +10,54 @@ global bsegments #segments to construct the bezier curve
 bsegments = 35
 global movingPoint
 movingPoint = None
+global curvature #curvature of the bezier curve
+curvature = Curvature()
+global mcurve
+mcurve = Curve() #main curve
+mcurve.make_master()
+
+
 
 
 #FUNCTIONS
-def onclick(event, curve, canva):
+def onclick(event, canva):
 	global movingPoint
 
-	movingPoint = curve.is_over_point(event.x, event.y)
+	movingPoint = mcurve.is_over_point(event.x, event.y)
 	if movingPoint is None:
-		dpoint, dlines = curve.is_showing_derivatives()
-		bpoint, blines = curve.is_showing_bcurve()
+		dpoint, dlines = mcurve.is_showing_derivatives()
+		bpoint, blines = mcurve.is_showing_bcurve()
 
-		curve.add_point(event.x, event.y)
+		mcurve.add_point(event.x, event.y)
 
 		if bpoint or blines:
-			curve.calc_bezier(bsegments)
-			curve.bcurve_show(bpoint, blines)
+			mcurve.calc_bezier(bsegments)
+			mcurve.bcurve_show(bpoint, blines)
 		if dpoint or dlines:
-			curve.delt = 0.5
-			curve.calc_derivatives()
+			mcurve.delt = 0.5
+			mcurve.calc_derivatives()
 
-		curve.derivatives_show(dpoint, dlines)
-		curve.draw(canva)
+		mcurve.derivatives_show(dpoint, dlines)
+		draw(canva)
 
-def onmove(event, curve, canva):
+def onmove(event, canva):
 	global movingPoint
 
 	if movingPoint is not None:
 		movingPoint.x = event.x
 		movingPoint.y = event.y
-		dpoint, dlines = curve.is_showing_derivatives()
-		bpoint, blines = curve.is_showing_bcurve()
+		dpoint, dlines = mcurve.is_showing_derivatives()
+		bpoint, blines = mcurve.is_showing_bcurve()
 
 		if bpoint or blines:
-			curve.calc_bezier(bsegments)
+			mcurve.calc_bezier(bsegments)
 		if dpoint or dlines:
-			curve.delt = 0.5
-			curve.calc_derivatives()
+			mcurve.delt = 0.5
+			mcurve.calc_derivatives()
 
-		curve.bcurve_show(bpoint, blines)
-		curve.derivatives_show(dpoint, dlines)
-		curve.draw(canva)
+		mcurve.bcurve_show(bpoint, blines)
+		mcurve.derivatives_show(dpoint, dlines)
+		draw(canva)
 
 
 def stopMoving(event):
@@ -57,53 +65,64 @@ def stopMoving(event):
 
 	movingPoint = None
 
-def toggle_control_lines(event, curve, canva):
-	if curve.show_lines:
-		curve.show_lines = False
-	elif curve.show_points:
-		curve.show_points = False
+def toggle_control_lines(event, canva):
+	if mcurve.show_lines:
+		mcurve.show_lines = False
+	elif mcurve.show_points:
+		mcurve.show_points = False
 	else:
-		curve.show_lines = True
-		curve.show_points = True
-	curve.draw(canva)
+		mcurve.show_lines = True
+		mcurve.show_points = True
+	draw(canva)
 
-def delete(event, curve, canva):
-	mp = curve.is_over_point(event.x, event.y) #local moving point
+def delete(event, canva):
+	mp = mcurve.is_over_point(event.x, event.y) #local moving point
 	if mp is not None:
-		curve.delete_point(mp)
+		mcurve.delete_point(mp)
 
-		dpoint, dlines = curve.is_showing_derivatives()
-		bpoint, blines = curve.is_showing_bcurve()
+		dpoint, dlines = mcurve.is_showing_derivatives()
+		bpoint, blines = mcurve.is_showing_bcurve()
 		if bpoint or blines:
-			curve.calc_bezier(bsegments)
-			curve.bcurve_show(bpoint, blines)
+			mcurve.calc_bezier(bsegments)
+			mcurve.bcurve_show(bpoint, blines)
 		if dpoint or dlines:
-			curve.delt = 0.5
-			curve.calc_derivatives()
+			mcurve.delt = 0.5
+			mcurve.calc_derivatives()
 
-		curve.draw(canva)
+		draw(canva)
 
-def keypress(event, curve, canva):
+def keypress(event, canva):
 	#all this is temporary
 	if event.char == 'b':
-		curve.calc_bezier(bsegments)
-		curve.draw(canva)
+		mcurve.calc_bezier(bsegments)
+		draw(canva)
 	elif event.char == 'v':
-		curve.toggle_bcurve_show()
-		curve.draw(canva)
+		mcurve.toggle_bcurve_show()
+		draw(canva)
 	elif event.char == 'd':
-		curve.delt = 0.5
-		curve.calc_derivatives()
-		curve.draw(canva)
+		mcurve.delt = 0.5
+		mcurve.calc_derivatives()
+		draw(canva)
 	elif event.char == 's':
-		curve.toggle_derivated_show()
-		curve.draw(canva)
+		mcurve.toggle_derivated_show()
+		draw(canva)
 	elif event.char == 'q':
-		curve.toggle_derivated_show()
-		curve.draw(canva)
+		mcurve.toggle_derivated_show()
+		draw(canva)
+	elif event.char == 'c':
+		curvature.erase()
+		l = curvature.calc_bcurce_curvature(mcurve)
+		for elem in l:
+			print(elem.x, elem.y)
+		if l is not None:
+			curvature.add_points(l)
+			draw(canva)
 	else:
 		pass
 
+def draw(canva):
+	mcurve.draw(canva)
+	curvature.draw(canva)
 
 #MAIN
 def main():
@@ -119,27 +138,27 @@ def main():
 	print("\t4. press 'd' to calculate and show the derivaties curves")
 	print("\t5. press 's' to toggle the derivaties curves view")
 	print("\t6. press 'space' to toggle the control curve view")
-	print("\t7. click on a point, hold and drag to move it")
-	print("\t8. move the mouse upon a point and press 'del' to delete it")
+	print("\t7. press 'c' to calculate the bezier curve curvature")
+	print("\t8. click on a point, hold and drag to move it")
+	print("\t9. move the mouse upon a point and press 'del' to delete it")
 
-	#CREATING AND SETTING CURVE
-	mcurve = Curve() #main curve
-	mcurve.make_master()
+	global mcurve
+	global curvature
 
 	#CREATING CANVA
 	tkroot = tk.Tk()
 	scrw = tkroot.winfo_screenwidth() #screen width
 	scrh = tkroot.winfo_screenheight() #screen height
 	print("screen resolution: " + str(scrw) + "x" + str(scrh))
-	# frame = tk.Canvas(tkroot, width=400, height=400)
-	frame = tk.Canvas(tkroot, width=scrw, height=scrh)
-	tkroot.attributes("-fullscreen", True)
-	tkroot.bind('<Button-1>', lambda event: onclick(event, curve=mcurve, canva=frame))
-	tkroot.bind("<Key>", lambda event: keypress(event, curve=mcurve, canva=frame))
-	tkroot.bind("<B1-Motion>", lambda event: onmove(event, curve=mcurve, canva=frame))
+	frame = tk.Canvas(tkroot, width=400, height=400)
+	# frame = tk.Canvas(tkroot, width=scrw, height=scrh)
+	# tkroot.attributes("-fullscreen", True)
+	tkroot.bind('<Button-1>', lambda event: onclick(event, canva=frame))
+	tkroot.bind("<Key>", lambda event: keypress(event, canva=frame))
+	tkroot.bind("<B1-Motion>", lambda event: onmove(event, canva=frame))
 	tkroot.bind("<ButtonRelease-1>", stopMoving)
-	tkroot.bind("<Key-space>", lambda event: toggle_control_lines(event, curve=mcurve, canva=frame))
-	tkroot.bind("<Delete>", lambda event: delete(event, curve=mcurve, canva=frame))
+	tkroot.bind("<Key-space>", lambda event: toggle_control_lines(event, canva=frame))
+	tkroot.bind("<Delete>", lambda event: delete(event, canva=frame))
 	frame.pack()
 	tk.mainloop()
 
