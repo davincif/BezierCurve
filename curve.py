@@ -42,10 +42,10 @@ class Curve:
 		return string
 
 	#"PROTECTED" ATTRIBUTE MANIPULATE METHODS
-	def isMaster(self):
+	def is_master(self):
 		return self.__master
 
-	def isBezier(self):
+	def is_bezier(self):
 		return self.__bezier
 
 	def make_master(self):
@@ -159,6 +159,14 @@ class Curve:
 		else:
 			raise Exception("need Curve.__add_point(Point2D), got (" + str(type(point)) + ")")
 		self.__lopS += 1
+		if not self.__bezier:
+			self.calc_degree()
+
+	def delete_point(self, point):
+		if type(point) is not Point2D:
+			raise Exception("this function receives a " + str(type(Point2D)) + ", but given was " + str(type(point)))
+		self.__lop.remove(point)
+		self.__lopS -= 1
 		if not self.__bezier:
 			self.calc_degree()
 
