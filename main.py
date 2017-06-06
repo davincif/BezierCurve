@@ -8,13 +8,16 @@ import functools
 #GLOBAL VARIABLES
 global bsegments #segments to construct the bezier curve
 bsegments = 35
+
 global movingPoint
 movingPoint = None
-global curvature #curvature of the bezier curve
-curvature = Curvature()
+
 global mcurve
 mcurve = Curve() #main curve
 mcurve.make_master()
+
+global curvature #curvature of the bezier curve
+curvature = Curvature()
 
 
 
@@ -110,13 +113,9 @@ def keypress(event, canva):
 		mcurve.toggle_derivated_show()
 		draw(canva)
 	elif event.char == 'c':
-		curvature.erase()
-		l = curvature.calc_bcurce_curvature(mcurve)
-		for elem in l:
-			print(elem.x, elem.y)
-		if l is not None:
-			curvature.add_points(l)
-			draw(canva)
+		curvature.calc_bcurce_curvature(mcurve)
+		curvature.show_lines = True
+		draw(canva)
 	else:
 		pass
 

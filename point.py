@@ -2,8 +2,8 @@ from vector import Vector2D
 import numbers
 
 class Point2D:
-	x = None
-	y = None
+	# x = None
+	# y = None
 
 	#OVERWRITE METHODS
 	def __init__(self, x, y):
@@ -18,6 +18,8 @@ class Point2D:
 			return Vector2D(self.x + other.x, self.y + other.y)
 		elif type(other) is Vector2D:
 			return Point2D(self.x + other.x, self.y + other.y)
+		elif isinstance(other, numbers.Number):
+			return Point2D(self.x + other, self.y + other)
 		else:
 			raise Exception("can't add " + str(type(self)) + "with" + str(type(other)) + ".")
 
@@ -25,7 +27,7 @@ class Point2D:
 		return self.__add__(other)
 
 	def __mul__(self, other):
-		if isinstance(other, numbers.Number) or type(other) is Vector2D:
+		if isinstance(other, numbers.Number):
 			return Point2D(other * self.x, other * self.y)
 		elif type(other) is Point2D:
 			return Vector2D(self.x * other.x, self.y * other.y)
@@ -40,6 +42,8 @@ class Point2D:
 			return Vector2D(self.x - other.x, self.y - other.y)
 		elif type(other) is Vector2D:
 			return Point2D(self.x - other.x, self.y - other.y)
+		elif isinstance(other, numbers.Number):
+			return Point2D(self.x - other, self.y - other)
 		else:
 			raise Exception("can't sub " + str(type(self)) + "with" + str(type(other)) + ".")
 
