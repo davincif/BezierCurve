@@ -17,7 +17,6 @@ mcurve = Curve() #main curve
 mcurve.make_master()
 
 global curvature #curvature of the bezier curve
-curvature = Curvature()
 
 
 
@@ -144,12 +143,15 @@ def main():
 	global mcurve
 	global curvature
 
+
 	#CREATING CANVA
 	tkroot = tk.Tk()
 	scrw = tkroot.winfo_screenwidth() #screen width
 	scrh = tkroot.winfo_screenheight() #screen height
+	width = 400 #window width
+	height = 400 #window height
 	print("screen resolution: " + str(scrw) + "x" + str(scrh))
-	frame = tk.Canvas(tkroot, width=400, height=400)
+	frame = tk.Canvas(tkroot, width=width, height=height)
 	# frame = tk.Canvas(tkroot, width=scrw, height=scrh)
 	# tkroot.attributes("-fullscreen", True)
 	tkroot.bind('<Button-1>', lambda event: onclick(event, canva=frame))
@@ -159,6 +161,9 @@ def main():
 	tkroot.bind("<Key-space>", lambda event: toggle_control_lines(event, canva=frame))
 	tkroot.bind("<Delete>", lambda event: delete(event, canva=frame))
 	frame.pack()
+
+	curvature = Curvature(width/2, height/2)
+
 	tk.mainloop()
 
 if __name__ == '__main__':
