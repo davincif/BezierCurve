@@ -53,17 +53,12 @@ class Curvature(Curve):
 				self.__second += [(self.__prime[n+1] - self.__prime[n]).make_point()]
 
 			#curvature
-			print("\nK:")
-			origin = Point2D(0, 0)
 			for n in range(0, len(self.__second)):
 				self._lop += [(self.__prime[n].x*self.__second[n].y -  self.__prime[n].y*self.__second[n].x) / (self.__prime[n].module())**3]
-				print(self._lop[n])
-				self._lop[n] = origin + 1/self._lop[n]
+				self._lop[n] = Point2D(self.__bcurve[n].x, 1/self._lop[n])
 
-			print("------------------\n")
-			print("Points where to print:")
 			#fiting curve on screen
-			self.resize_curve()
+			# self.resize_curve()
 		else:
 				print("There's no bezier curve to calculate its curvature")
 
