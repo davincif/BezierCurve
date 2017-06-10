@@ -30,9 +30,11 @@ class Curvature(Curve):
 
 	#COMMON METHODS
 	def calc_bcurce_curvature(self, mcurve):
+		###
 		# x'(t)y''(t) - y'(t)x''(t) 
 		# _________________________		curvature
 		# (x'(t)² y'(t)²)^(3/2)
+		###
 
 		self.is_calced = True
 
@@ -61,7 +63,7 @@ class Curvature(Curve):
 				self._lop[n] = Point2D(self.__bcurve[n].x, 1/self._lop[n])
 
 			#fiting curve on screen
-			# self.resize_curve()
+			self.resize_curve()
 		else:
 				print("There's no bezier curve to calculate its curvature")
 
@@ -91,6 +93,12 @@ class Curvature(Curve):
 		y_factor = 1
 		stretch_factor = 1
 
+		#calculating resize vector
+		# changing coordinate
+		# change_coord = start_p/2 - Point2D(0, 0)
+
+
+		#mensuring factors
 		if size.x > self.window_size.x:
 			x_factor = self.window_size.x / size.x
 
@@ -100,23 +108,27 @@ class Curvature(Curve):
 		if x_factor != y_factor:
 			stretch_factor = min([x_factor, y_factor])
 
-		translation_factor = self.window_size/2 - (start_p + size/2)
-		corrector = (size/2) * stretch_factor
-		for n in range(0, len(self._lop)-1):
+		#calculating translation vector
+		translation = Point2D(20, 20) - start_p
+
+		print("translation: ", translation)
+		print("stretch_factor: ", stretch_factor)
+		#appling transformations
+		for n in range(0, len(self._lop)):
+			self._lop[n] = self._lop[n]*stretch_factor + translation
 			print(self._lop[n])
-			self._lop[n] = (self._lop[n] + corrector) + translation_factor
 
 	def get_dimentions(self):
 		###
-		# 
+		# get dimentions
 		###
 
-		max_x = -999999
-		max_y = -999999
-		min_x = 999999
-		min_y = 999999
+		max_x = self._lop[0].x
+		max_y = self._lop[0].y
+		min_x = self._lop[0].x
+		min_y = self._lop[0].y
 
-		for n in range(0, len(self._lop)):
+		for n in range(1, len(self._lop)):
 			if self._lop[n].x > max_x:
 				max_x = self._lop[n].x
 			elif self._lop[n].x < min_x:
