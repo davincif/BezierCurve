@@ -39,6 +39,9 @@ def onclick(event, canva):
 			mcurve.delt = 0.5
 			mcurve.calc_derivatives()
 
+		if curvature.is_calced:
+			curvature.calc_bcurce_curvature(mcurve)
+
 		mcurve.derivatives_show(dpoint, dlines)
 		draw(canva)
 
@@ -56,6 +59,9 @@ def onmove(event, canva):
 		if dpoint or dlines:
 			mcurve.delt = 0.5
 			mcurve.calc_derivatives()
+
+		if curvature.is_calced:
+			curvature.calc_bcurce_curvature(mcurve)
 
 		mcurve.bcurve_show(bpoint, blines)
 		mcurve.derivatives_show(dpoint, dlines)
@@ -90,6 +96,9 @@ def delete(event, canva):
 		if dpoint or dlines:
 			mcurve.delt = 0.5
 			mcurve.calc_derivatives()
+
+		if curvature.is_calced:
+			curvature.calc_bcurce_curvature(mcurve)
 
 		draw(canva)
 

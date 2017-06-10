@@ -8,6 +8,7 @@ class Curvature(Curve):
 	__second = [] #seconde derivative
 	__bcurve = [] #hold the bezier curve to calculate the curvature
 	window_size = None #screen dimentions
+	is_calced = False # if this curvature was already calculated
 
 	def __init__(self, win_x, win_y):
 		super()
@@ -32,6 +33,8 @@ class Curvature(Curve):
 		# x'(t)y''(t) - y'(t)x''(t) 
 		# _________________________		curvature
 		# (x'(t)² y'(t)²)^(3/2)
+
+		self.is_calced = True
 
 		#erase possible old content
 		self._lop = []
