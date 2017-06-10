@@ -93,11 +93,6 @@ class Curvature(Curve):
 		y_factor = 1
 		stretch_factor = 1
 
-		#calculating resize vector
-		# changing coordinate
-		# change_coord = start_p/2 - Point2D(0, 0)
-
-
 		#mensuring factors
 		if size.x > self.window_size.x:
 			x_factor = self.window_size.x / size.x
@@ -108,15 +103,15 @@ class Curvature(Curve):
 		if x_factor != y_factor:
 			stretch_factor = min([x_factor, y_factor])
 
-		#calculating translation vector
-		translation = Point2D(20, 20) - start_p
-
-		print("translation: ", translation)
-		print("stretch_factor: ", stretch_factor)
 		#appling transformations
 		for n in range(0, len(self._lop)):
-			self._lop[n] = self._lop[n]*stretch_factor + translation
-			print(self._lop[n])
+			self._lop[n] = self._lop[n]*stretch_factor
+
+		#calculating translation vector
+		start_p, size = self.get_dimentions()
+		translation = Point2D(0, 0) - start_p
+		for n in range(0, len(self._lop)):
+			self._lop[n] = self._lop[n] + translation
 
 	def get_dimentions(self):
 		###
