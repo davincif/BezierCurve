@@ -1,6 +1,6 @@
 import numbers
 from point import Point2D
-from vector import Vector2D
+from point import Vector2D
 import bt
 
 class Curve:

@@ -162,7 +162,7 @@ def main():
 	tkroot.bind("<Delete>", lambda event: delete(event, canva=frame))
 	frame.pack()
 
-	curvature = Curvature(width/2, height/2)
+	curvature = Curvature(width, height)
 
 	tk.mainloop()
 
