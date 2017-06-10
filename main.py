@@ -16,9 +16,9 @@ global mcurve
 mcurve = Curve() #main curve
 mcurve.make_master()
 
+global curvature_canva
+
 global curvature #curvature of the bezier curve
-
-
 
 
 #FUNCTIONS
@@ -103,6 +103,7 @@ def delete(event, canva):
 		draw(canva)
 
 def keypress(event, canva):
+	global curvature_canva
 	#all this is temporary
 	if event.char == 'b':
 		mcurve.calc_bezier(bsegments)
@@ -128,8 +129,9 @@ def keypress(event, canva):
 		pass
 
 def draw(canva):
+	global curvature_canva
 	mcurve.draw(canva)
-	curvature.draw(canva)
+	curvature.draw(curvature_canva)
 
 #MAIN
 def main():
@@ -151,14 +153,16 @@ def main():
 
 	global mcurve
 	global curvature
+	global curvature_canva
 
-
-	#CREATING CANVA
+	#CREATING MAIN CANVA
 	tkroot = tk.Tk()
 	scrw = tkroot.winfo_screenwidth() #screen width
 	scrh = tkroot.winfo_screenheight() #screen height
-	width = 400 #window width
-	height = 400 #window height
+	width = round(scrw/2) - 10 #window width
+	height = scrh #window height
+	tkroot.geometry(str(width) + "x" + str(height) + "+0+0")
+	tkroot.title("Main Window")
 	print("screen resolution: " + str(scrw) + "x" + str(scrh))
 	frame = tk.Canvas(tkroot, width=width, height=height)
 	# frame = tk.Canvas(tkroot, width=scrw, height=scrh)
@@ -170,6 +174,15 @@ def main():
 	tkroot.bind("<Key-space>", lambda event: toggle_control_lines(event, canva=frame))
 	tkroot.bind("<Delete>", lambda event: delete(event, canva=frame))
 	frame.pack()
+
+	#CREATING CURVATURE CANVA
+	curve_window = tk.Toplevel()
+	curve_window.title("Curvature")
+	curve_window.geometry(str(width) + "x" + str(height) + "-0+0")
+	curvature_canva = tk.Canvas(curve_window, width=width, height=height)
+	curvature_canva.pack()
+
+	tkroot.lift(aboveThis=curve_window)
 
 	curvature = Curvature(width, height)
 

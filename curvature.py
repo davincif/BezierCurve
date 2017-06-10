@@ -31,7 +31,7 @@ class Curvature(Curve):
 	#COMMON METHODS
 	def calc_bcurce_curvature(self, mcurve):
 		###
-		# x'(t)y''(t) - y'(t)x''(t) 
+		# x'(t)y''(t) - y'(t)x''(t)
 		# _________________________		curvature
 		# (x'(t)² y'(t)²)^(3/2)
 		###
@@ -65,7 +65,7 @@ class Curvature(Curve):
 			#fiting curve on screen
 			self.resize_curve()
 		else:
-				print("There's no bezier curve to calculate its curvature")
+			print("There's no bezier curve to calculate its curvature")
 
 	def draw(self, canva):
 		canva.delete("ccurve")
@@ -84,7 +84,7 @@ class Curvature(Curve):
 
 	def resize_curve(self):
 		###
-		# 
+		#
 		###
 
 		start_p, size = self.get_dimentions()
@@ -128,7 +128,7 @@ class Curvature(Curve):
 				max_x = self._lop[n].x
 			elif self._lop[n].x < min_x:
 				min_x = self._lop[n].x
-			
+
 			if self._lop[n].y > max_y:
 				max_y = self._lop[n].y
 			elif self._lop[n].y < min_y:
